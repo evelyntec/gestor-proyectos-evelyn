@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block clase_body %}pagina-acceso{% endblock %}
+{% block contenido %}
+<section class="acceso">
+  <div class="acceso-tarjeta con-cinta">
+    <h1>Inicia sesión</h1>
+    <p class="bajada">Organiza tus proyectos y tareas en un solo lugar.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "partials/formulario.html" %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="boton boton-principal boton-ancho">Entrar</button>
+    </form>
+    <p class="acceso-pie">¿Aún no tienes cuenta? <a href="{% url 'registro' %}">Crea una aquí</a>.</p>
+  </div>
+</section>
+{% endblock %}

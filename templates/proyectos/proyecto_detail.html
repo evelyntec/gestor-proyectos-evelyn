@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}{{ proyecto.nombre }}{% endblock %}
+{% block contenido %}
+<p class="miga"><a href="{% url 'proyectos:lista' %}">Mis proyectos</a></p>
+<header class="encabezado con-cinta">
+  <div>
+    <h1>{{ proyecto.nombre }}</h1>
+    <p class="bajada">
+      <span class="estado estado-{{ proyecto.estado }}">{{ proyecto.get_estado_display }}</span>
+      Desde el {{ proyecto.fecha_inicio|date:"j \d\e F \d\e Y" }}{% if proyecto.fecha_limite %} hasta el {{ proyecto.fecha_limite|date:"j \d\e F \d\e Y" }}{% endif %}
+    </p>
+  </div>
+  <div class="grupo-botones">
+    <a href="{% url 'proyectos:editar' proyecto.pk %}" class="boton boton-suave">Editar proyecto</a>
+    <a href="{% url 'proyectos:eliminar' proyecto.pk %}" class="boton boton-peligro">Eliminar</a>
+  </div>
+</header>
+
+<div class="columnas columnas-detalle">
+  <section class="panel">
+    <div class="panel-cabecera">
+      <h2>Tareas</h2>
+      <a href="{% url 'proyectos:tarea_crear' proyecto.pk %}" class="boton boton-principal">Agregar tarea</a>
+    </div>
+    {% if tareas %}
+      <ul class="lista-tareas">
+        {% for tarea in tareas %}
+          {% include "partials/tarea_item.html" %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="vacio">
+        <p>Este proyecto aún no tiene tareas. Agrega la primera para empezar a medir el avance.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <aside class="panel panel-lateral">
+    <h2>Avance</h2>
+    <p class="avance-cifra">{{ proyecto.avance }} %</p>
+    <div class="avance avance-grande" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ proyecto.avance }}" aria-label="Avance del proyecto">
+      <span style="width: {{ proyecto.avance }}%"></span>
+    </div>
+    <p class="proyecto-datos">{{ proyecto.num_completadas }} de {{ proyecto.num_tareas }} tarea{{ proyecto.num_tareas|pluralize }} completada{{ proyecto.num_tareas|pluralize }}</p>
+    {% if proyecto.descripcion %}
+      <h2>Descripción</h2>
+      <p class="descripcion">{{ proyecto.descripcion|linebreaksbr }}</p>
+    {% endif %}
+    <p class="nota">Última actualización: {{ proyecto.actualizado|date:"j \d\e F, H:i" }}</p>
+  </aside>
+</div>
+{% endblock %}

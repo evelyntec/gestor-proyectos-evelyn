@@ -1,0 +1,25 @@
+<li class="tarea{% if tarea.completada %} tarea-hecha{% endif %}{% if tarea.vencida %} tarea-vencida{% endif %}">
+  <form method="post" action="{% url 'proyectos:tarea_alternar' tarea.pk %}" class="tarea-alternar">
+    {% csrf_token %}
+    <input type="hidden" name="siguiente" value="{{ request.get_full_path }}">
+    <button type="submit" class="casilla" aria-label="{% if tarea.completada %}Marcar «{{ tarea.titulo }}» como pendiente{% else %}Marcar «{{ tarea.titulo }}» como completada{% endif %}">
+      {% if tarea.completada %}<svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>{% endif %}
+    </button>
+  </form>
+  <div class="tarea-cuerpo">
+    <p class="tarea-titulo">{{ tarea.titulo }}</p>
+    <p class="tarea-datos">
+      <span class="prioridad prioridad-{{ tarea.prioridad }}">Prioridad {{ tarea.get_prioridad_display|lower }}</span>
+      {% if tarea.fecha_limite %}
+        <span class="fecha{% if tarea.vencida %} fecha-vencida{% endif %}">{% if tarea.vencida %}Venció el{% else %}Vence el{% endif %} {{ tarea.fecha_limite|date:"j \d\e F" }}</span>
+      {% else %}
+        <span class="fecha">Sin fecha límite</span>
+      {% endif %}
+      {% if mostrar_proyecto %}<a href="{{ tarea.proyecto.get_absolute_url }}" class="tarea-proyecto">{{ tarea.proyecto.nombre }}</a>{% endif %}
+    </p>
+  </div>
+  <div class="tarea-acciones">
+    <a href="{% url 'proyectos:tarea_editar' tarea.pk %}" class="enlace-accion">Editar</a>
+    <a href="{% url 'proyectos:tarea_eliminar' tarea.pk %}" class="enlace-accion enlace-peligro">Eliminar</a>
+  </div>
+</li>

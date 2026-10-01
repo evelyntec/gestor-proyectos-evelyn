@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}{% if object %}Editar tarea{% else %}Nueva tarea{% endif %}{% endblock %}
+{% block contenido %}
+<p class="miga miga-centrada"><a href="{{ proyecto.get_absolute_url }}">{{ proyecto.nombre }}</a></p>
+<section class="panel panel-formulario con-cinta">
+  <h1>{% if object %}Editar tarea{% else %}Nueva tarea{% endif %}</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "partials/formulario.html" %}
+    <div class="grupo-botones">
+      <button type="submit" class="boton boton-principal">{% if object %}Guardar cambios{% else %}Agregar tarea{% endif %}</button>
+      <a href="{{ proyecto.get_absolute_url }}" class="boton boton-suave">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

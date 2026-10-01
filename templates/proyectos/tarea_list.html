@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Mis tareas{% endblock %}
+{% block contenido %}
+<header class="encabezado con-cinta">
+  <div>
+    <h1>Mis tareas</h1>
+    <p class="bajada">Todas las tareas de tus proyectos, ordenadas por fecha límite.</p>
+  </div>
+</header>
+
+<nav class="pestanas" aria-label="Filtrar tareas">
+  {% for clave, etiqueta in opciones_filtro %}
+    <a href="?filtro={{ clave }}" {% if clave == filtro_actual %}aria-current="page"{% endif %}>{{ etiqueta }}</a>
+  {% endfor %}
+</nav>
+
+<section class="panel">
+  {% if tareas %}
+    <ul class="lista-tareas">
+      {% for tarea in tareas %}
+        {% include "partials/tarea_item.html" with mostrar_proyecto=True %}
+      {% endfor %}
+    </ul>
+    {% include "partials/paginacion.html" with filtros="filtro="|add:filtro_actual %}
+  {% else %}
+    <div class="vacio">
+      {% if filtro_actual == "vencidas" %}
+        <p>No tienes tareas vencidas. Vas al día.</p>
+      {% elif filtro_actual == "completadas" %}
+        <p>Aún no completas tareas. Márcalas con la casilla cuando las termines.</p>
+      {% else %}
+        <p>No hay tareas para mostrar. Entra a un proyecto y agrega una.</p>
+        <a href="{% url 'proyectos:lista' %}" class="boton boton-principal">Ir a mis proyectos</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

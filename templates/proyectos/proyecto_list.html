@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Proyectos{% endblock %}
+{% block contenido %}
+<header class="encabezado con-cinta">
+  <div>
+    <h1>Mis proyectos</h1>
+    <p class="bajada">{{ paginator.count }} proyecto{{ paginator.count|pluralize }}{% if busqueda or estado_actual %} con los filtros aplicados{% endif %}.</p>
+  </div>
+  <a href="{% url 'proyectos:crear' %}" class="boton boton-principal">Nuevo proyecto</a>
+</header>
+
+<form method="get" class="filtros" role="search">
+  <label for="id_q">Buscar</label>
+  <input type="search" id="id_q" name="q" value="{{ busqueda }}" placeholder="Nombre o descripción">
+  <label for="id_estado">Estado</label>
+  <select id="id_estado" name="estado">
+    <option value="">Todos</option>
+    {% for valor, etiqueta in estados %}
+      <option value="{{ valor }}" {% if valor == estado_actual %}selected{% endif %}>{{ etiqueta }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="boton boton-suave">Filtrar</button>
+  {% if busqueda or estado_actual %}<a href="{% url 'proyectos:lista' %}" class="enlace-accion">Quitar filtros</a>{% endif %}
+</form>
+
+{% if proyectos %}
+  <ul class="lista-proyectos rejilla-proyectos">
+    {% for proyecto in proyectos %}
+      {% include "proyectos/_proyecto_fila.html" %}
+    {% endfor %}
+  </ul>
+  {% include "partials/paginacion.html" %}
+{% else %}
+  <div class="vacio panel">
+    {% if busqueda or estado_actual %}
+      <p>Ningún proyecto coincide con esa búsqueda. Prueba con otro nombre o estado.</p>
+    {% else %}
+      <p>Todavía no tienes proyectos. Crea uno y agrégale tareas.</p>
+      <a href="{% url 'proyectos:crear' %}" class="boton boton-principal">Crear proyecto</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

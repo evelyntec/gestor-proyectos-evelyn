@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titulo %}Crear cuenta{% endblock %}
+{% block clase_body %}pagina-acceso{% endblock %}
+{% block contenido %}
+<section class="acceso">
+  <div class="acceso-tarjeta acceso-tarjeta-ancha con-cinta">
+    <h1>Crea tu cuenta</h1>
+    <p class="bajada">Con tu cuenta podrás crear proyectos y seguir el avance de cada tarea.</p>
+    <form method="post" novalidate class="rejilla-form">
+      {% csrf_token %}
+      {% include "partials/formulario.html" %}
+      <button type="submit" class="boton boton-principal boton-ancho">Crear cuenta</button>
+    </form>
+    <p class="acceso-pie">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a>.</p>
+  </div>
+</section>
+{% endblock %}

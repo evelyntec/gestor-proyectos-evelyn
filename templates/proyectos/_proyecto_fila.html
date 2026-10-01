@@ -1,0 +1,13 @@
+<li class="proyecto proyecto-{{ proyecto.estado }}">
+  <a href="{{ proyecto.get_absolute_url }}" class="proyecto-enlace">
+    <span class="proyecto-nombre">{{ proyecto.nombre }}</span>
+    <span class="estado estado-{{ proyecto.estado }}">{{ proyecto.get_estado_display }}</span>
+  </a>
+  <div class="avance" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ proyecto.avance }}" aria-label="Avance de {{ proyecto.nombre }}">
+    <span style="width: {{ proyecto.avance }}%"></span>
+  </div>
+  <p class="proyecto-datos">
+    {{ proyecto.num_completadas }} de {{ proyecto.num_tareas }} tarea{{ proyecto.num_tareas|pluralize }} lista{{ proyecto.num_tareas|pluralize }} ({{ proyecto.avance }} %)
+    {% if proyecto.fecha_limite %}<span>Cierre: {{ proyecto.fecha_limite|date:"j \d\e F" }}</span>{% endif %}
+  </p>
+</li>

@@ -1,0 +1,50 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Evelyn Álvarez">
+  <title>{% block titulo %}Inicio{% endblock %} | Gestor de Proyectos Evelyn Álvarez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body class="{% block clase_body %}{% endblock %}">
+  <header class="barra">
+    <a class="marca" href="{% if user.is_authenticated %}{% url 'proyectos:resumen' %}{% else %}{% url 'login' %}{% endif %}">
+      {% include "partials/logo.html" %}
+      <span class="marca-texto">
+        <strong>Evelyn Álvarez</strong>
+        <span>Gestor de proyectos</span>
+      </span>
+    </a>
+    <nav class="menu" aria-label="Navegación principal">
+      {% if user.is_authenticated %}
+        {% with actual=request.resolver_match.url_name %}
+        <a href="{% url 'proyectos:resumen' %}" {% if actual == 'resumen' %}aria-current="page"{% endif %}>Resumen</a>
+        <a href="{% url 'proyectos:lista' %}" {% if actual == 'lista' or actual == 'detalle' %}aria-current="page"{% endif %}>Proyectos</a>
+        <a href="{% url 'proyectos:mis_tareas' %}" {% if actual == 'mis_tareas' %}aria-current="page"{% endif %}>Mis tareas</a>
+        {% endwith %}
+        {% if user.is_staff %}<a href="{% url 'admin:index' %}">Administración</a>{% endif %}
+        <form method="post" action="{% url 'logout' %}" class="form-salir">
+          {% csrf_token %}
+          <button type="submit" class="boton boton-suave">Cerrar sesión</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a href="{% url 'registro' %}" class="boton boton-principal">Crear cuenta</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="contenido">
+    {% include "partials/mensajes.html" %}
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="pie">
+    <p>Gestor de Proyectos desarrollado por Evelyn Álvarez, 23 de septiembre de 2026.</p>
+  </footer>
+</body>
+</html>

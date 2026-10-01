@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block titulo %}Resumen{% endblock %}
+{% block contenido %}
+<header class="encabezado con-cinta">
+  <div>
+    <h1>Hola, {{ user.first_name|default:user.username }}</h1>
+    <p class="bajada">Hoy es {{ hoy|date:"l j \d\e F \d\e Y" }}.</p>
+  </div>
+  <a href="{% url 'proyectos:crear' %}" class="boton boton-principal">Nuevo proyecto</a>
+</header>
+
+<dl class="indicadores">
+  <div class="indicador">
+    <dt>Proyectos en curso</dt>
+    <dd>{{ proyectos_en_curso }}<span> de {{ total_proyectos }}</span></dd>
+  </div>
+  <div class="indicador">
+    <dt>Tareas pendientes</dt>
+    <dd>{{ tareas_pendientes }}</dd>
+  </div>
+  <div class="indicador{% if tareas_vencidas %} indicador-alerta{% endif %}">
+    <dt>Tareas vencidas</dt>
+    <dd>{{ tareas_vencidas }}</dd>
+  </div>
+  <div class="indicador">
+    <dt>Tareas completadas</dt>
+    <dd>{{ tareas_completadas }}</dd>
+  </div>
+</dl>
+
+<div class="columnas">
+  <section class="panel">
+    <div class="panel-cabecera">
+      <h2>Proyectos activos</h2>
+      <a href="{% url 'proyectos:lista' %}" class="enlace-accion">Ver todos</a>
+    </div>
+    {% if proyectos %}
+      <ul class="lista-proyectos">
+        {% for proyecto in proyectos %}
+          {% include "proyectos/_proyecto_fila.html" %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="vacio">
+        <p>Aún no tienes proyectos activos. Crea el primero para empezar a organizar tus tareas.</p>
+        <a href="{% url 'proyectos:crear' %}" class="boton boton-principal">Crear proyecto</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-cabecera">
+      <h2>Próximas tareas</h2>
+      <a href="{% url 'proyectos:mis_tareas' %}" class="enlace-accion">Ver todas</a>
+    </div>
+    {% if proximas_tareas %}
+      <ul class="lista-tareas">
+        {% for tarea in proximas_tareas %}
+          {% include "partials/tarea_item.html" with mostrar_proyecto=True %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="vacio"><p>No tienes tareas pendientes. Agrega tareas desde cualquiera de tus proyectos.</p></div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

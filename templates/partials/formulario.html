@@ -1,0 +1,9 @@
+{% if form.non_field_errors %}
+<div class="aviso aviso-error">{{ form.non_field_errors }}</div>
+{% endif %}
+{% for campo in form.hidden_fields %}{{ campo }}{% endfor %}
+{% for campo in form.visible_fields %}
+<div class="campo{% if campo.errors %} campo-con-error{% endif %}{% if campo.widget_type == 'checkbox' %} campo-casilla{% endif %}">
+  {{ campo.as_field_group }}
+</div>
+{% endfor %}
